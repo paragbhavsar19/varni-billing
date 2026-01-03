@@ -123,7 +123,7 @@ export default function KhajurDudhPage() {
     <>
       <main className="h-[100vh] bg-gradient-to-br from-amber-50 to-orange-100 overflow-hidden flex flex-col">
         <Header showBackButton />
-        <div className="flex flex-col  items-stretch h-full flex-1 pb-2">
+        <div className="flex flex-col  items-stretch h-full flex-1 pb-52">
           {/* Left Section - Bill Table */}
           {/* <div className="lg:col-span-2 h-[381px]"> */}
           <div className="lg:col-span-2 h-[50%] p-2">
@@ -175,8 +175,7 @@ export default function KhajurDudhPage() {
                               colSpan={4}
                               className="px-2 py-8 text-center text-gray-500"
                             >
-                              No items added yet. Add products from the right
-                              panel.
+                              No items added yet.
                             </td>
                           </tr>
                         ) : (
