@@ -263,7 +263,7 @@ export default function KhajurDudhPage() {
               
               </div>
               {/* <div className=" overflow-auto"> */}
-              <div className="overflow-auto relative z-10 pt-2 h-[calc(100vh-590px)]">
+              <div className="overflow-auto relative z-10 pt-2 h-[calc(100vh-640px)]">
                 {products.map((product, index) => {
                   const qty130 = getProductQuantity(product.name, "130ml");
                   const qty150 = getProductQuantity(product.name, "150ml");
