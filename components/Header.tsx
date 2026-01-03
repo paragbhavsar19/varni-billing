@@ -20,9 +20,9 @@ export default function Header({ showBackButton = false }: HeaderProps) {
 
   return (
     <div className="bg-[#d8cb9e] h-14 fixed top-0 left-0 right-0 z-50 shadow-md">
-      <div className="flex justify-between items-center px-4 py-2 max-w-7xl mx-auto">
+      <div className="flex justify-between items-center px-4 pt-3 max-w-7xl mx-auto">
         <div className="flex items-center gap-4">
-          <h1 className="text-orange-900 font-bold text-xl">OCBIS</h1>
+          <p className="text-orange-900 font-bold text-xl">OCBIS</p>
         </div>
 
         <div className="flex items-center gap-4">

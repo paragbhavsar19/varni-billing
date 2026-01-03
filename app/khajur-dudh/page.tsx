@@ -123,7 +123,7 @@ export default function KhajurDudhPage() {
     <> <Header showBackButton />
     <main className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 py-2 px-2 sm:py-6 sm:px-4 mt-14 overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-3 gap-4">
+        <div className="flex flex-col gap-5">
           {/* Left Section - Bill Table */}
           <div className="lg:col-span-2 h-[381px]">
             <div className="bg-white rounded-lg shadow-md p-2 sm:p-4 h-full flex flex-col">
@@ -182,22 +182,22 @@ export default function KhajurDudhPage() {
                               key={item.id}
                               className="border-b border-gray-200 hover:bg-gray-50"
                             >
-                              <td className="px-2 py-3 text-sm min-w-[160px]">
+                              <td className="px-2 py-3 text-sm min-w-[160px] text-black">
                                 {item.name}
                               </td>
                               <td className="px-2 py-3">
                                 <div className="flex items-center justify-center gap-1">
                                   
-                                  <span className="font-semibold w-8 text-center text-sm">
+                                  <span className="font-semibold w-8 text-center text-sm text-black">
                                     {item.qty}
                                   </span>
                                   
                                 </div>
                               </td>
-                              <td className="px-2 py-3 text-right text-sm">
+                              <td className="px-2 py-3 text-right text-sm text-black">
                                 ₹{item.rate}
                               </td>
-                              <td className="px-2 py-3 text-right font-semibold text-sm">
+                              <td className="px-2 py-3 text-right font-semibold text-sm text-black">
                                 ₹{item.total}
                               </td>
                             </tr>
@@ -269,14 +269,14 @@ export default function KhajurDudhPage() {
                         {/* 130ml */}
                         <div className="flex flex-col items-center gap-1">
                           {qty130 > 0 ? (
-                            <div className="flex items-center gap-1 bg-amber-100 px-2 py-1 rounded">
+                            <div className="flex items-center justify-between gap-1 bg-amber-100 px-2 py-1 rounded w-[115px]">
                               <button
                                 onClick={() => updateQuantity(`${product.name}-130ml`, -1)}
                                 className="bg-red-500 text-white p-1 rounded hover:bg-red-600"
                               >
                                 <Minus size={12} />
                               </button>
-                              <span className="font-semibold w-6 text-center text-xs">
+                              <span className="font-semibold w-6 text-center text-xs text-black">
                                 {qty130}
                               </span>
                               <button
@@ -299,7 +299,7 @@ export default function KhajurDudhPage() {
                         {/* 150ml */}
                         <div className="flex flex-col items-center gap-1">
                           {qty150 > 0 ? (
-                            <div className="flex items-center gap-1 bg-amber-100 px-2 py-1 rounded">
+                            <div className="flex items-center gap-1 bg-amber-100 px-2 py-1 rounded w-[115px]">
                               <button
                                 onClick={() => updateQuantity(`${product.name}-150ml`, -1)}
                                 className="bg-red-500 text-white p-1 rounded hover:bg-red-600"
