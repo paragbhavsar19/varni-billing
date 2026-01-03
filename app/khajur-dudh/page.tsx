@@ -44,7 +44,7 @@ export default function KhajurDudhPage() {
 
     setBillItems((prev) => {
       const existing = prev.find((item) => item.id === itemKey);
-      
+
       if (existing) {
         return prev.map((item) =>
           item.id === itemKey
@@ -120,12 +120,13 @@ export default function KhajurDudhPage() {
   };
 
   return (
-    <> <Header showBackButton />
-    <main className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 py-2 px-2 sm:py-6 sm:px-4 mt-14 overflow-hidden">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col gap-5">
+    <>
+      <main className="h-[100vh] bg-gradient-to-br from-amber-50 to-orange-100 overflow-hidden flex flex-col">
+        <Header showBackButton />
+        <div className="flex flex-col  items-stretch h-full flex-1 pb-2">
           {/* Left Section - Bill Table */}
-          <div className="lg:col-span-2 h-[381px]">
+          {/* <div className="lg:col-span-2 h-[381px]"> */}
+          <div className="lg:col-span-2 h-[50%] p-2">
             <div className="bg-white rounded-lg shadow-md p-2 sm:p-4 h-full flex flex-col">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-[18px] font-bold text-orange-950">
@@ -164,6 +165,7 @@ export default function KhajurDudhPage() {
                       </tr>
                     </thead>
                   </table>
+                  {/* max-h-[230px] overflow-y-auto */}
                   <div className="max-h-[230px] overflow-y-auto">
                     <table className="w-full">
                       <tbody>
@@ -173,7 +175,8 @@ export default function KhajurDudhPage() {
                               colSpan={4}
                               className="px-2 py-8 text-center text-gray-500"
                             >
-                              No items added yet. Add products from the right panel.
+                              No items added yet. Add products from the right
+                              panel.
                             </td>
                           </tr>
                         ) : (
@@ -187,17 +190,15 @@ export default function KhajurDudhPage() {
                               </td>
                               <td className="px-2 py-3">
                                 <div className="flex items-center justify-center gap-1">
-                                  
-                                  <span className="font-semibold w-8 text-center text-sm text-black">
+                                  <span className=" w-8 text-center text-sm text-black">
                                     {item.qty}
                                   </span>
-                                  
                                 </div>
                               </td>
                               <td className="px-2 py-3 text-right text-sm text-black">
                                 ₹{item.rate}
                               </td>
-                              <td className="px-2 py-3 text-right font-semibold text-sm text-black">
+                              <td className="px-2 py-3 text-right  text-sm text-black">
                                 ₹{item.total}
                               </td>
                             </tr>
@@ -240,23 +241,32 @@ export default function KhajurDudhPage() {
           </div>
 
           {/* Right Section - Add Products */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 h-[50%] p-2 pt-0  relative">
             <div className="bg-white rounded-lg shadow-md p-2 sm:p-4">
-              <h3 className="text-lg sm:text-xl font-bold text-orange-950 mb-2">
-                Add Products
-              </h3>
-              <div className="flex items-center bg-orange-100 z-10 justify-between py-2 px-3 rounded mb-3">
-                <p className="px-2 py-1 text-left text-sm font-semibold text-orange-950">Item Name</p>
-                <div className="flex items-center gap-16">
-                  <p className="px-2 py-1 text-center text-sm font-semibold text-orange-950">130ml</p>
-                  <p className="px-2 py-1 text-center text-sm font-semibold text-orange-950">150ml</p>
-                </div>
+              
+                <h3 className="text-lg sm:text-xl font-bold text-orange-950 mb-2">
+                  Add Products
+                </h3>
+                <div className="flex items-center bg-orange-100 z-10 justify-between py-2 px-3 rounded mb-3">
+                  <p className="px-2 py-1 text-left text-sm font-semibold text-orange-950">
+                    Item Name
+                  </p>
+                  <div className="flex items-center gap-16">
+                    <p className="px-2 py-1 text-center text-sm font-semibold text-orange-950">
+                      130ml
+                    </p>
+                    <p className="px-2 py-1 text-center text-sm font-semibold text-orange-950">
+                      150ml
+                    </p>
+                  </div>
+              
               </div>
-              <div className="h-[calc(100vh-580px)] overflow-auto">
+              {/* <div className=" overflow-auto"> */}
+              <div className="overflow-auto relative z-10 pt-2 h-[calc(100vh-560px)]">
                 {products.map((product, index) => {
                   const qty130 = getProductQuantity(product.name, "130ml");
                   const qty150 = getProductQuantity(product.name, "150ml");
-                  
+
                   return (
                     <div
                       key={index}
@@ -271,7 +281,9 @@ export default function KhajurDudhPage() {
                           {qty130 > 0 ? (
                             <div className="flex items-center justify-between gap-1 bg-amber-100 px-2 py-1 rounded w-[115px]">
                               <button
-                                onClick={() => updateQuantity(`${product.name}-130ml`, -1)}
+                                onClick={() =>
+                                  updateQuantity(`${product.name}-130ml`, -1)
+                                }
                                 className="bg-red-500 text-white p-1 rounded hover:bg-red-600"
                               >
                                 <Minus size={12} />
@@ -280,7 +292,9 @@ export default function KhajurDudhPage() {
                                 {qty130}
                               </span>
                               <button
-                                onClick={() => updateQuantity(`${product.name}-130ml`, 1)}
+                                onClick={() =>
+                                  updateQuantity(`${product.name}-130ml`, 1)
+                                }
                                 className="bg-green-500 text-white p-1 rounded hover:bg-green-600"
                               >
                                 <Plus size={12} />
@@ -299,9 +313,11 @@ export default function KhajurDudhPage() {
                         {/* 150ml */}
                         <div className="flex flex-col items-center gap-1">
                           {qty150 > 0 ? (
-                            <div className="flex items-center gap-1 bg-amber-100 px-2 py-1 rounded w-[115px]">
+                            <div className="flex justify-between items-center gap-1 bg-amber-100 px-2 py-1 rounded w-[115px]">
                               <button
-                                onClick={() => updateQuantity(`${product.name}-150ml`, -1)}
+                                onClick={() =>
+                                  updateQuantity(`${product.name}-150ml`, -1)
+                                }
                                 className="bg-red-500 text-white p-1 rounded hover:bg-red-600"
                               >
                                 <Minus size={12} />
@@ -310,7 +326,9 @@ export default function KhajurDudhPage() {
                                 {qty150}
                               </span>
                               <button
-                                onClick={() => updateQuantity(`${product.name}-150ml`, 1)}
+                                onClick={() =>
+                                  updateQuantity(`${product.name}-150ml`, 1)
+                                }
                                 className="bg-green-500 text-white p-1 rounded hover:bg-green-600"
                               >
                                 <Plus size={12} />
@@ -333,8 +351,7 @@ export default function KhajurDudhPage() {
             </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
     </>
   );
 }
