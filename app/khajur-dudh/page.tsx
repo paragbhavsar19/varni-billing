@@ -243,10 +243,12 @@ export default function KhajurDudhPage() {
           {/* Right Section - Add Products */}
           <div className="lg:col-span-1 h-[50%] p-2 pt-0  relative">
             <div className="bg-white rounded-lg shadow-md p-2 sm:p-4">
-              
-                <h3 className="text-lg sm:text-xl font-bold text-orange-950 mb-2">
-                  Add Products
-                </h3>
+              <div className="justify-between flex items-center mb-2">
+                  <h3 className="text-lg sm:text-xl font-bold text-orange-950 ">
+                    Products
+                  </h3>
+                  <button className="bg-green-600 text-white px-3 py-1 rounded-lg text-[14px]">Add Product</button>
+                </div>
                 <div className="flex items-center bg-orange-100 z-10 justify-between py-2 px-3 rounded mb-3">
                   <p className="px-2 py-1 text-left text-sm font-semibold text-orange-950">
                     Item Name
@@ -262,7 +264,7 @@ export default function KhajurDudhPage() {
               
               </div>
               {/* <div className=" overflow-auto"> */}
-              <div className="overflow-auto relative z-10 pt-2 h-[calc(100vh-560px)]">
+              <div className="overflow-auto relative z-10 pt-2 h-[calc(100vh-590px)]">
                 {products.map((product, index) => {
                   const qty130 = getProductQuantity(product.name, "130ml");
                   const qty150 = getProductQuantity(product.name, "150ml");
@@ -322,7 +324,7 @@ export default function KhajurDudhPage() {
                               >
                                 <Minus size={12} />
                               </button>
-                              <span className="font-semibold w-6 text-center text-xs">
+                              <span className="font-semibold w-6 text-center text-xs text-black">
                                 {qty150}
                               </span>
                               <button
