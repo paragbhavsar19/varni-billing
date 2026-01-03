@@ -123,7 +123,7 @@ export default function KhajurDudhPage() {
     <>
       <main className="h-[100vh] bg-gradient-to-br from-amber-50 to-orange-100 overflow-hidden flex flex-col">
         <Header showBackButton />
-        <div className="flex flex-col  items-stretch h-full flex-1 pb-52">
+        <div className="flex flex-col  items-stretch h-full flex-1 pb-0">
           {/* Left Section - Bill Table */}
           {/* <div className="lg:col-span-2 h-[381px]"> */}
           <div className="lg:col-span-2 h-[50%] p-2">
