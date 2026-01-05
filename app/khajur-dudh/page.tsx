@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Plus, Minus } from "lucide-react";
-import Header from "@/components/Header";
+import { Plus, Minus, X, Edit2, Trash2, Check } from "lucide-react";
 
 type BillItem = {
   id: string;
@@ -13,27 +12,51 @@ type BillItem = {
 };
 
 type Product = {
+  id: string;
   name: string;
   price130: number;
   price150: number;
+  enabled: boolean;
 };
+
+// Mock Header component
+const Header = ({ showBackButton }: { showBackButton?: boolean }) => (
+  <div className="bg-orange-600 text-white p-3 h-[50px] flex items-center">
+    {showBackButton && <button className="mr-3">←</button>}
+    <h1 className="text-xl font-bold">Khajur Dudh Billing</h1>
+  </div>
+);
 
 export default function KhajurDudhPage() {
   const [billItems, setBillItems] = useState<BillItem[]>([]);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
+  const [isAddingNew, setIsAddingNew] = useState(false);
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    price130: "",
+    price150: "",
+  });
 
   // Product catalog with prices
-  const products: Product[] = [
-    { name: "Plain KHD", price130: 50, price150: 70 },
-    { name: "Thabdi KHD", price130: 60, price150: 80 },
-    { name: "Elaichi KHD", price130: 60, price150: 80 },
-    { name: "Chocolate KHD", price130: 60, price150: 80 },
-    { name: "Gulkand KHD", price130: 60, price150: 80 },
-    { name: "Anjeer KHD", price130: 70, price150: 90 },
-    { name: "Dryfruit KHD", price130: 70, price150: 90 },
-    { name: "Kesar KHD", price130: 70, price150: 90 },
-    { name: "Varni Special ", price130: 100, price150: 120 },
-    { name: "Packing Charge", price130: 10, price150: 10 },
-  ];
+  const [products, setProducts] = useState<Product[]>([
+    { id: "1", name: "Plain KHD", price130: 50, price150: 70, enabled: true },
+    { id: "2", name: "Thabdi KHD", price130: 60, price150: 80, enabled: true },
+    { id: "3", name: "Elaichi KHD", price130: 60, price150: 80, enabled: true },
+    { id: "4", name: "Chocolate KHD", price130: 60, price150: 80, enabled: true },
+    { id: "5", name: "Gulkand KHD", price130: 60, price150: 80, enabled: true },
+    { id: "6", name: "Anjeer KHD", price130: 70, price150: 90, enabled: true },
+    { id: "7", name: "Dryfruit KHD", price130: 70, price150: 90, enabled: true },
+    { id: "8", name: "Kesar KHD", price130: 70, price150: 90, enabled: true },
+    { id: "9", name: "Varni Special", price130: 100, price150: 120, enabled: true },
+    { id: "10", name: "Packing Charge", price130: 10, price150: 10, enabled: true },
+  ]);
+
+  const [editFormData, setEditFormData] = useState({
+    name: "",
+    price130: "",
+    price150: "",
+  });
 
   const addProduct = (productName: string, size: "130ml" | "150ml") => {
     const product = products.find((p) => p.name === productName);
@@ -119,6 +142,95 @@ export default function KhajurDudhPage() {
     window.print();
   };
 
+  const toggleProductEnabled = (id: string) => {
+    setProducts(
+      products.map((p) => (p.id === id ? { ...p, enabled: !p.enabled } : p))
+    );
+  };
+
+  const deleteProduct = (id: string) => {
+    if (confirm("Are you sure you want to delete this product?")) {
+      setProducts(products.filter((p) => p.id !== id));
+    }
+  };
+
+  const startEditingProduct = (product: Product) => {
+    setEditingProductId(product.id);
+    setEditFormData({
+      name: product.name,
+      price130: product.price130.toString(),
+      price150: product.price150.toString(),
+    });
+  };
+
+  const saveEditProduct = (id: string) => {
+    if (!editFormData.name.trim()) {
+      alert("Please enter item name");
+      return;
+    }
+    if (!editFormData.price130 || parseFloat(editFormData.price130) <= 0) {
+      alert("Please enter valid 130ml price");
+      return;
+    }
+    if (!editFormData.price150 || parseFloat(editFormData.price150) <= 0) {
+      alert("Please enter valid 150ml price");
+      return;
+    }
+
+    setProducts(
+      products.map((p) =>
+        p.id === id
+          ? {
+              ...p,
+              name: editFormData.name.trim(),
+              price130: parseFloat(editFormData.price130),
+              price150: parseFloat(editFormData.price150),
+            }
+          : p
+      )
+    );
+    setEditingProductId(null);
+  };
+
+  const cancelEdit = () => {
+    setEditingProductId(null);
+    setEditFormData({ name: "", price130: "", price150: "" });
+  };
+
+  const handleAddNewProduct = () => {
+    if (!newProduct.name.trim()) {
+      alert("Please enter item name");
+      return;
+    }
+    if (!newProduct.price130 || parseFloat(newProduct.price130) <= 0) {
+      alert("Please enter valid 130ml price");
+      return;
+    }
+    if (!newProduct.price150 || parseFloat(newProduct.price150) <= 0) {
+      alert("Please enter valid 150ml price");
+      return;
+    }
+
+    const productToAdd: Product = {
+      id: Date.now().toString(),
+      name: newProduct.name.trim(),
+      price130: parseFloat(newProduct.price130),
+      price150: parseFloat(newProduct.price150),
+      enabled: true,
+    };
+
+    setProducts([...products, productToAdd]);
+    setNewProduct({ name: "", price130: "", price150: "" });
+    setIsAddingNew(false);
+  };
+
+  const cancelAddNew = () => {
+    setIsAddingNew(false);
+    setNewProduct({ name: "", price130: "", price150: "" });
+  };
+
+  const enabledProducts = products.filter((p) => p.enabled);
+
   return (
     <>
       <Header showBackButton />
@@ -160,7 +272,6 @@ export default function KhajurDudhPage() {
                     </tr>
                   </thead>
                 </table>
-                {/* max-h-[230px] overflow-y-auto */}
                 <div className="max-h-[83%] overflow-y-auto">
                   <table className="w-full">
                     <tbody>
@@ -237,9 +348,14 @@ export default function KhajurDudhPage() {
               <h3 className="text-lg sm:text-xl font-bold text-orange-950 ">
                 Products
               </h3>
-              <button className="bg-green-600 text-white px-3 py-1 rounded-lg text-[14px]">
-                Add Product
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setIsEditModalOpen(true)}
+                  className="bg-green-600 text-white px-3 py-1 rounded-md text-[12px] hover:bg-green-700 transition-colors"
+                >
+                  Edit Product
+                </button>
+              </div>
             </div>
             <div className="flex items-center bg-orange-100 z-10 justify-between py-2 px-3 rounded mb-3">
               <p className="px-2 py-1 text-left text-sm font-semibold text-orange-950">
@@ -255,95 +371,318 @@ export default function KhajurDudhPage() {
               </div>
             </div>
             <div className="overflow-auto relative z-10 pt-2 h-[66%]">
-                {products.map((product, index) => {
-                  const qty130 = getProductQuantity(product.name, "130ml");
-                  const qty150 = getProductQuantity(product.name, "150ml");
+              {enabledProducts.map((product, index) => {
+                const qty130 = getProductQuantity(product.name, "130ml");
+                const qty150 = getProductQuantity(product.name, "150ml");
 
-                  return (
-                    <div
-                      key={index}
-                      className="border-b border-gray-200 hover:border-orange-300 transition-colors flex justify-between items-center py-3 px-2"
-                    >
-                      <h4 className="font-semibold text-gray-800 text-sm sm:text-base">
-                        {product.name}
-                      </h4>
-                      <div className="grid grid-cols-2 gap-2">
-                        {/* 130ml */}
-                        <div className="flex flex-col items-center gap-1">
-                          {qty130 > 0 ? (
-                            <div className="flex items-center justify-between gap-1 bg-amber-100 px-2 py-1 rounded w-[115px]">
-                              <button
-                                onClick={() =>
-                                  updateQuantity(`${product.name}-130ml`, -1)
-                                }
-                                className="bg-red-500 text-white p-1 rounded hover:bg-red-600"
-                              >
-                                <Minus size={12} />
-                              </button>
-                              <span className="font-semibold w-6 text-center text-xs text-black">
-                                {qty130}
-                              </span>
-                              <button
-                                onClick={() =>
-                                  updateQuantity(`${product.name}-130ml`, 1)
-                                }
-                                className="bg-green-500 text-white p-1 rounded hover:bg-green-600"
-                              >
-                                <Plus size={12} />
-                              </button>
-                            </div>
-                          ) : (
+                return (
+                  <div
+                    key={product.id}
+                    className="border-b border-gray-200 hover:border-orange-300 transition-colors flex justify-between items-center py-3 px-2"
+                  >
+                    <h4 className="font-semibold text-gray-800 text-sm sm:text-base">
+                      {product.name}
+                    </h4>
+                    <div className="grid grid-cols-2 gap-2">
+                      {/* 130ml */}
+                      <div className="flex flex-col items-center gap-1">
+                        {qty130 > 0 ? (
+                          <div className="flex items-center justify-between gap-1 bg-amber-100 px-2 py-1 rounded w-[115px]">
                             <button
-                              onClick={() => addProduct(product.name, "130ml")}
-                              className="bg-amber-500 text-white px-5 py-2 w-[115px] rounded hover:bg-amber-600 transition-colors text-xs sm:text-sm font-semibold"
+                              onClick={() =>
+                                updateQuantity(`${product.name}-130ml`, -1)
+                              }
+                              className="bg-red-500 text-white p-1 rounded hover:bg-red-600"
                             >
-                              Add ₹{product.price130}
+                              <Minus size={12} />
                             </button>
-                          )}
-                        </div>
+                            <span className="font-semibold w-6 text-center text-xs text-black">
+                              {qty130}
+                            </span>
+                            <button
+                              onClick={() =>
+                                updateQuantity(`${product.name}-130ml`, 1)
+                              }
+                              className="bg-green-500 text-white p-1 rounded hover:bg-green-600"
+                            >
+                              <Plus size={12} />
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => addProduct(product.name, "130ml")}
+                            className="bg-amber-500 text-white px-5 py-2 w-[115px] rounded hover:bg-amber-600 transition-colors text-xs sm:text-sm font-semibold"
+                          >
+                            Add ₹{product.price130}
+                          </button>
+                        )}
+                      </div>
 
-                        {/* 150ml */}
-                        <div className="flex flex-col items-center gap-1">
-                          {qty150 > 0 ? (
-                            <div className="flex justify-between items-center gap-1 bg-amber-100 px-2 py-1 rounded w-[115px]">
-                              <button
-                                onClick={() =>
-                                  updateQuantity(`${product.name}-150ml`, -1)
-                                }
-                                className="bg-red-500 text-white p-1 rounded hover:bg-red-600"
-                              >
-                                <Minus size={12} />
-                              </button>
-                              <span className="font-semibold w-6 text-center text-xs text-black">
-                                {qty150}
-                              </span>
-                              <button
-                                onClick={() =>
-                                  updateQuantity(`${product.name}-150ml`, 1)
-                                }
-                                className="bg-green-500 text-white p-1 rounded hover:bg-green-600"
-                              >
-                                <Plus size={12} />
-                              </button>
-                            </div>
-                          ) : (
+                      {/* 150ml */}
+                      <div className="flex flex-col items-center gap-1">
+                        {qty150 > 0 ? (
+                          <div className="flex justify-between items-center gap-1 bg-amber-100 px-2 py-1 rounded w-[115px]">
                             <button
-                              onClick={() => addProduct(product.name, "150ml")}
-                              className="bg-amber-500 text-white px-5 py-2 w-[115px] rounded hover:bg-amber-600 transition-colors text-xs sm:text-sm font-semibold"
+                              onClick={() =>
+                                updateQuantity(`${product.name}-150ml`, -1)
+                              }
+                              className="bg-red-500 text-white p-1 rounded hover:bg-red-600"
                             >
-                              Add ₹{product.price150}
+                              <Minus size={12} />
                             </button>
-                          )}
-                        </div>
+                            <span className="font-semibold w-6 text-center text-xs text-black">
+                              {qty150}
+                            </span>
+                            <button
+                              onClick={() =>
+                                updateQuantity(`${product.name}-150ml`, 1)
+                              }
+                              className="bg-green-500 text-white p-1 rounded hover:bg-green-600"
+                            >
+                              <Plus size={12} />
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => addProduct(product.name, "150ml")}
+                            className="bg-amber-500 text-white px-5 py-2 w-[115px] rounded hover:bg-amber-600 transition-colors text-xs sm:text-sm font-semibold"
+                          >
+                            Add ₹{product.price150}
+                          </button>
+                        )}
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          
         </div>
       </div>
+
+      {/* Edit Product Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <h2 className="text-lg font-bold text-orange-950">
+                Product List
+              </h2>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setIsAddingNew(true)}
+                  className="bg-green-600 text-white px-3 py-1 rounded-lg text-[12px] font-semibold hover:bg-green-700 transition-colors flex items-center gap-2"
+                >
+                  <Plus size={10} />
+                  Add Product
+                </button>
+                <button
+                  onClick={() => {
+                    setIsEditModalOpen(false);
+                    setEditingProductId(null);
+                    setIsAddingNew(false);
+                    setNewProduct({ name: "", price130: "", price150: "" });
+                  }}
+                  className="text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+            </div>
+            <div className="p-4 overflow-auto flex-1">
+              <table className="w-full">
+                <thead className="bg-orange-100 sticky top-0">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-orange-950">
+                      Item Name
+                    </th>
+                    <th className="px-4 py-3 text-center text-sm font-semibold text-orange-950">
+                      130ml Price
+                    </th>
+                    <th className="px-4 py-3 text-center text-sm font-semibold text-orange-950">
+                      150ml Price
+                    </th>
+                    <th className="px-4 py-3 text-center text-sm font-semibold text-orange-950">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.map((product) => (
+                    <tr
+                      key={product.id}
+                      className="border-b border-gray-200 hover:bg-gray-50"
+                    >
+                      {editingProductId === product.id ? (
+                        <>
+                          <td className="px-4 py-3">
+                            <input
+                              type="text"
+                              value={editFormData.name}
+                              onChange={(e) =>
+                                setEditFormData({
+                                  ...editFormData,
+                                  name: e.target.value,
+                                })
+                              }
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm text-black focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            />
+                          </td>
+                          <td className="px-4 py-3">
+                            <input
+                              type="number"
+                              value={editFormData.price130}
+                              onChange={(e) =>
+                                setEditFormData({
+                                  ...editFormData,
+                                  price130: e.target.value,
+                                })
+                              }
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm text-black text-center focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            />
+                          </td>
+                          <td className="px-4 py-3">
+                            <input
+                              type="number"
+                              value={editFormData.price150}
+                              onChange={(e) =>
+                                setEditFormData({
+                                  ...editFormData,
+                                  price150: e.target.value,
+                                })
+                              }
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-sm text-black text-center focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            />
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="flex items-center justify-center gap-2">
+                              <button
+                                onClick={() => saveEditProduct(product.id)}
+                                className="bg-green-600 text-white p-2 rounded hover:bg-green-700 transition-colors"
+                                title="Save"
+                              >
+                                <Check size={16} />
+                              </button>
+                              <button
+                                onClick={cancelEdit}
+                                className="bg-gray-500 text-white p-2 rounded hover:bg-gray-600 transition-colors"
+                                title="Cancel"
+                              >
+                                <X size={16} />
+                              </button>
+                            </div>
+                          </td>
+                        </>
+                      ) : (
+                        <>
+                          <td className="px-4 py-3 text-sm text-black">
+                            {product.name}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-black text-center">
+                            ₹{product.price130}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-black text-center">
+                            ₹{product.price150}
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="flex items-center justify-center gap-2">
+                               <label className="relative inline-flex items-center cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={product.enabled}
+                                  onChange={() =>
+                                    toggleProductEnabled(product.id)
+                                  }
+                                  className="sr-only peer"
+                                />
+                                <div className="w-8 h-4 bg-gray-300 peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-green-600"></div>
+                              </label>
+                              <button
+                                onClick={() => startEditingProduct(product)}
+                                className="bg-blue-600 text-white p-1.5 rounded hover:bg-blue-700 transition-colors"
+                                title="Edit"
+                              >
+                                <Edit2 size={12} />
+                              </button>
+                              <button
+                                onClick={() => deleteProduct(product.id)}
+                                className="bg-red-600 text-white p-1.5 rounded hover:bg-red-700 transition-colors"
+                                title="Delete"
+                              >
+                                <Trash2 size={10} />
+                              </button>
+                            </div>
+                          </td>
+                        </>
+                      )}
+                    </tr>
+                  ))}
+                  {/* Add New Product Row */}
+                  {isAddingNew && (
+                    <tr className="border-b-2 border-green-500 bg-green-50">
+                      <td className="px-4 py-3">
+                        <input
+                          type="text"
+                          value={newProduct.name}
+                          onChange={(e) =>
+                            setNewProduct({ ...newProduct, name: e.target.value })
+                          }
+                          placeholder="Enter item name"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm text-black focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                      </td>
+                      <td className="px-4 py-3">
+                        <input
+                          type="number"
+                          value={newProduct.price130}
+                          onChange={(e) =>
+                            setNewProduct({
+                              ...newProduct,
+                              price130: e.target.value,
+                            })
+                          }
+                          placeholder="Price"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm text-black text-center focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                      </td>
+                      <td className="px-4 py-3">
+                        <input
+                          type="number"
+                          value={newProduct.price150}
+                          onChange={(e) =>
+                            setNewProduct({
+                              ...newProduct,
+                              price150: e.target.value,
+                            })
+                          }
+                          placeholder="Price"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm text-black text-center focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            onClick={handleAddNewProduct}
+                            className="bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700 transition-colors text-xs font-semibold"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={cancelAddNew}
+                            className="bg-gray-500 text-white px-3 py-2 rounded hover:bg-gray-600 transition-colors text-xs font-semibold"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
