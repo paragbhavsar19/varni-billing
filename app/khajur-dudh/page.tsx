@@ -19,6 +19,113 @@ type Product = {
   enabled: boolean;
 };
 
+// Thermal Print Component
+const ThermalBillPrint = ({ billItems, grandTotal }: { billItems: BillItem[], grandTotal: number }) => {
+  const currentDate = new Date();
+  const formattedDate = currentDate.toLocaleDateString('en-IN', { 
+    day: '2-digit', 
+    month: '2-digit', 
+    year: 'numeric' 
+  });
+  const formattedTime = currentDate.toLocaleTimeString('en-IN', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: true 
+  });
+
+  return (
+    <div className="thermal-print hidden print:block">
+      <div className="thermal-receipt">
+        {/* Header */}
+        <div className="text-center mb-3">
+          <h2 className="text-lg font-semibold">Varni Khajur Dudh Billing</h2>
+          <div className="border-t-2 border-dashed border-black my-2"></div>
+        </div>
+
+        {/* Date & Time */}
+        <div className="text-sm mb-3">
+          <div className="flex justify-between">
+            <span>Date: {formattedDate}</span>
+            <span>Time: {formattedTime}</span>
+          </div>
+          <div className="border-t border-dashed border-black my-2"></div>
+        </div>
+
+        {/* Items Table */}
+        <table className="w-full text-sm mb-3">
+          <thead>
+            <tr className="border-b border-black">
+              <th className="text-left py-1">Item</th>
+              <th className="text-center py-1 w-12">Qty</th>
+              <th className="text-right py-1 w-16">Rate</th>
+              <th className="text-right py-1 w-20">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {billItems.map((item, index) => (
+              <tr key={index} className="border-b border-dashed border-gray-400">
+                <td className="py-1.5 pr-2">{item.name}</td>
+                <td className="text-center py-1.5">{item.qty}</td>
+                <td className="text-right py-1.5">₹{item.rate}</td>
+                <td className="text-right py-1.5 font-semibold">₹{item.total}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* Total Section */}
+        <div className="border-t-2 border-black pt-2 mb-3">
+          <div className="flex justify-between text-lg font-bold">
+            <span>GRAND TOTAL:</span>
+            <span>₹{grandTotal}</span>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="text-center text-sm mt-4">
+          <div className="border-t border-dashed border-black my-2"></div>
+          <p className="font-semibold mb-1">Thank You for Your Order!</p>
+          <p className="text-xs">Visit Again</p>
+        </div>
+      </div>
+
+      <style jsx>{`
+        @media print {
+          @page {
+            size: 80mm auto;
+            margin: 0;
+          }
+          
+          body {
+            margin: 0;
+            padding: 0;
+          }
+
+          .thermal-receipt {
+            width: 80mm;
+            padding: 10mm 5mm;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            color: black;
+            background: white;
+          }
+
+          .thermal-receipt * {
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+          }
+
+          /* Hide everything except thermal print */
+          body > *:not(.thermal-print) {
+            display: none !important;
+          }
+        }
+      `}</style>
+    </div>
+  );
+};
+
 // Mock Header component
 const Header = ({ showBackButton }: { showBackButton?: boolean }) => (
   <div className="bg-orange-600 text-white p-3 h-[50px] flex items-center">
@@ -139,6 +246,10 @@ export default function KhajurDudhPage() {
   };
 
   const handlePrint = () => {
+    if (billItems.length === 0) {
+      alert("Please add items to the bill before printing!");
+      return;
+    }
     window.print();
   };
 
@@ -234,7 +345,12 @@ export default function KhajurDudhPage() {
   return (
     <>
       <Header showBackButton />
-      <div className="bg-gradient-to-br from-amber-50 to-orange-100 h-[calc(100vh-50px)]">
+      
+      {/* Thermal Print Component - Hidden on screen, visible on print */}
+      <ThermalBillPrint billItems={billItems} grandTotal={calculateGrandTotal()} />
+      
+      {/* Main UI - Visible on screen, hidden on print */}
+      <div className="bg-gradient-to-br from-amber-50 to-orange-100 h-[calc(100vh-50px)] print:hidden">
         <div className="h-[51%] p-2">
           <div className="bg-white rounded-md shadow-md h-full p-2">
             <div className="flex items-center justify-between mb-2">
@@ -462,7 +578,7 @@ export default function KhajurDudhPage() {
 
       {/* Edit Product Modal */}
       {isEditModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 print:hidden">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
               <h2 className="text-lg font-bold text-orange-950">
