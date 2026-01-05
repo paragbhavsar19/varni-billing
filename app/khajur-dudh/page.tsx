@@ -23,7 +23,7 @@ type Product = {
 const Header = ({ showBackButton }: { showBackButton?: boolean }) => (
   <div className="bg-orange-600 text-white p-3 h-[50px] flex items-center">
     {showBackButton && <button className="mr-3">←</button>}
-    <h1 className="text-xl font-bold">Khajur Dudh Billing</h1>
+    <h1 className="text-xl font-bold">OCBIS KH Billing</h1>
   </div>
 );
 
