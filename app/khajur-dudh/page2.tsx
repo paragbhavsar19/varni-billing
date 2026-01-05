@@ -121,140 +121,149 @@ export default function KhajurDudhPage() {
 
   return (
     <>
-      <Header showBackButton />
-      <div className="bg-gradient-to-br from-amber-50 to-orange-100 h-[calc(100vh-50px)]">
-        <div className="h-[51%] p-2">
-          <div className="bg-white rounded-md shadow-md h-full p-2">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-[18px] font-bold text-orange-950">
-                Current Bill
-              </h3>
-              {billItems.length > 0 && (
-                <div className="">
-                  <span className="text-[18px] font-bold text-orange-950 pr-5">
-                    Grand Total:
-                  </span>
-                  <span className="text-[18px] sm:text-2xl font-bold text-orange-950">
-                    ₹{calculateGrandTotal()}
-                  </span>
-                </div>
-              )}
-            </div>
-            <div className="block h-[calc(100%-86px)]">
-              <div className="h-full">
-                <table className="w-full">
-                  <thead className="bg-orange-100 sticky top-0 z-10">
-                    <tr>
-                      <th className="px-2 py-3 text-left text-sm font-semibold text-orange-950 min-w-[160px]">
-                        Item
-                      </th>
-                      <th className="px-2 py-3 text-center text-sm font-semibold text-orange-950">
-                        Qty
-                      </th>
-                      <th className="px-2 py-3 text-right text-sm font-semibold text-orange-950">
-                        Rate
-                      </th>
-                      <th className="px-2 py-3 text-right text-sm font-semibold text-orange-950">
-                        Total
-                      </th>
-                    </tr>
-                  </thead>
-                </table>
-                {/* max-h-[230px] overflow-y-auto */}
-                <div className="max-h-[83%] overflow-y-auto">
+      <main className="h-[100vh] bg-gradient-to-br from-amber-50 to-orange-100 overflow-hidden flex flex-col">
+        <Header showBackButton />
+        <div className="flex flex-col  items-stretch h-full flex-1 pb-0">
+          {/* Left Section - Bill Table */}
+          {/* <div className="lg:col-span-2 h-[381px]"> */}
+          <div className="lg:col-span-2 h-[50%] p-2">
+            <div className="bg-white rounded-lg shadow-md p-2 sm:p-4 h-full flex flex-col">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-[18px] font-bold text-orange-950">
+                  Current Bill
+                </h3>
+                {billItems.length > 0 && (
+                  <div className="">
+                    <span className="text-[18px] font-bold text-orange-950 pr-5">
+                      Grand Total:
+                    </span>
+                    <span className="text-[18px] sm:text-2xl font-bold text-orange-950">
+                      ₹{calculateGrandTotal()}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Bill Table */}
+              <div className="block overflow-x-auto flex-1">
+                <div className="inline-block min-w-full">
                   <table className="w-full">
-                    <tbody>
-                      {billItems.length === 0 ? (
-                        <tr>
-                          <td
-                            colSpan={4}
-                            className="px-2 py-8 text-center text-gray-500"
-                          >
-                            No items added yet.
-                          </td>
-                        </tr>
-                      ) : (
-                        billItems.map((item) => (
-                          <tr
-                            key={item.id}
-                            className="border-b border-gray-200 hover:bg-gray-50"
-                          >
-                            <td className="px-2 py-3 text-sm min-w-[160px] text-black">
-                              {item.name}
-                            </td>
-                            <td className="px-2 py-3">
-                              <div className="flex items-center justify-center gap-1">
-                                <span className=" w-8 text-center text-sm text-black">
-                                  {item.qty}
-                                </span>
-                              </div>
-                            </td>
-                            <td className="px-2 py-3 text-right text-sm text-black">
-                              ₹{item.rate}
-                            </td>
-                            <td className="px-2 py-3 text-right  text-sm text-black">
-                              ₹{item.total}
+                    <thead className="bg-orange-100 sticky top-0 z-10">
+                      <tr>
+                        <th className="px-2 py-3 text-left text-sm font-semibold text-orange-950 min-w-[160px]">
+                          Item
+                        </th>
+                        <th className="px-2 py-3 text-center text-sm font-semibold text-orange-950">
+                          Qty
+                        </th>
+                        <th className="px-2 py-3 text-right text-sm font-semibold text-orange-950">
+                          Rate
+                        </th>
+                        <th className="px-2 py-3 text-right text-sm font-semibold text-orange-950">
+                          Total
+                        </th>
+                      </tr>
+                    </thead>
+                  </table>
+                  {/* max-h-[230px] overflow-y-auto */}
+                  <div className="max-h-[230px] overflow-y-auto">
+                    <table className="w-full">
+                      <tbody>
+                        {billItems.length === 0 ? (
+                          <tr>
+                            <td
+                              colSpan={4}
+                              className="px-2 py-8 text-center text-gray-500"
+                            >
+                              No items added yet.
                             </td>
                           </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
+                        ) : (
+                          billItems.map((item) => (
+                            <tr
+                              key={item.id}
+                              className="border-b border-gray-200 hover:bg-gray-50"
+                            >
+                              <td className="px-2 py-3 text-sm min-w-[160px] text-black">
+                                {item.name}
+                              </td>
+                              <td className="px-2 py-3">
+                                <div className="flex items-center justify-center gap-1">
+                                  <span className=" w-8 text-center text-sm text-black">
+                                    {item.qty}
+                                  </span>
+                                </div>
+                              </td>
+                              <td className="px-2 py-3 text-right text-sm text-black">
+                                ₹{item.rate}
+                              </td>
+                              <td className="px-2 py-3 text-right  text-sm text-black">
+                                ₹{item.total}
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="mt-3 grid grid-cols-4 sm:flex sm:flex-wrap gap-2 sm:gap-3 sticky bottom-0 bg-white">
-              <button
-                onClick={clearBill}
-                className="bg-gray-500 text-white px-2.5 py-2 rounded-lg font-semibold hover:bg-gray-600 transition-colors text-xs sm:text-sm"
-              >
-                Clear
-              </button>
-              <button
-                onClick={handleSave}
-                className="bg-green-600 text-white px-2.5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors text-xs sm:text-sm"
-              >
-                Save
-              </button>
-              <button
-                onClick={handlePrint}
-                className="bg-orange-600 text-white px-2.5 py-2 rounded-lg font-semibold hover:bg-orange-700 transition-colors text-xs sm:text-sm"
-              >
-                Print
-              </button>
-              <button
-                onClick={handleSaveAndPrint}
-                className="bg-blue-600 text-white px-2.5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-xs sm:text-sm"
-              >
-                Save & Print
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="h-[49%] p-2">
-          <div className="bg-white rounded-md shadow-md h-full p-2">
-            <div className="justify-between flex items-center mb-2">
-              <h3 className="text-lg sm:text-xl font-bold text-orange-950 ">
-                Products
-              </h3>
-              <button className="bg-green-600 text-white px-3 py-1 rounded-lg text-[14px]">
-                Add Product
-              </button>
-            </div>
-            <div className="flex items-center bg-orange-100 z-10 justify-between py-2 px-3 rounded mb-3">
-              <p className="px-2 py-1 text-left text-sm font-semibold text-orange-950">
-                Item Name
-              </p>
-              <div className="flex items-center gap-16">
-                <p className="px-2 py-1 text-center text-sm font-semibold text-orange-950">
-                  130ml
-                </p>
-                <p className="px-2 py-1 text-center text-sm font-semibold text-orange-950">
-                  150ml
-                </p>
+
+              {/* Action Buttons */}
+              <div className="mt-3 grid grid-cols-4 sm:flex sm:flex-wrap gap-2 sm:gap-3 sticky bottom-0 bg-white">
+                <button
+                  onClick={clearBill}
+                  className="bg-gray-500 text-white px-2.5 py-2 rounded-lg font-semibold hover:bg-gray-600 transition-colors text-xs sm:text-sm"
+                >
+                  Clear
+                </button>
+                <button
+                  onClick={handleSave}
+                  className="bg-green-600 text-white px-2.5 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors text-xs sm:text-sm"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={handlePrint}
+                  className="bg-orange-600 text-white px-2.5 py-2 rounded-lg font-semibold hover:bg-orange-700 transition-colors text-xs sm:text-sm"
+                >
+                  Print
+                </button>
+                <button
+                  onClick={handleSaveAndPrint}
+                  className="bg-blue-600 text-white px-2.5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-xs sm:text-sm"
+                >
+                  Save & Print
+                </button>
               </div>
             </div>
-            <div className="overflow-auto relative z-10 pt-2 h-[calc(100vh-640px)]">
+          </div>
+
+          {/* Right Section - Add Products */}
+          <div className="lg:col-span-1 h-[50%] p-2 pt-0  relative">
+            <div className="bg-white rounded-lg shadow-md p-2 sm:p-4">
+              <div className="justify-between flex items-center mb-2">
+                  <h3 className="text-lg sm:text-xl font-bold text-orange-950 ">
+                    Products
+                  </h3>
+                  <button className="bg-green-600 text-white px-3 py-1 rounded-lg text-[14px]">Add Product</button>
+                </div>
+                <div className="flex items-center bg-orange-100 z-10 justify-between py-2 px-3 rounded mb-3">
+                  <p className="px-2 py-1 text-left text-sm font-semibold text-orange-950">
+                    Item Name
+                  </p>
+                  <div className="flex items-center gap-16">
+                    <p className="px-2 py-1 text-center text-sm font-semibold text-orange-950">
+                      130ml
+                    </p>
+                    <p className="px-2 py-1 text-center text-sm font-semibold text-orange-950">
+                      150ml
+                    </p>
+                  </div>
+              
+              </div>
+              {/* <div className=" overflow-auto"> */}
+              <div className="overflow-auto relative z-10 pt-2 h-[calc(100vh-640px)]">
                 {products.map((product, index) => {
                   const qty130 = getProductQuantity(product.name, "130ml");
                   const qty150 = getProductQuantity(product.name, "150ml");
@@ -340,10 +349,10 @@ export default function KhajurDudhPage() {
                   );
                 })}
               </div>
+            </div>
           </div>
-          
         </div>
-      </div>
+      </main>
     </>
   );
 }

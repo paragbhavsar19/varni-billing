@@ -20,9 +20,9 @@ export default function DashboardPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-100 pb-10 pt-20 px-4 ">
+      <main className="h-[100vh] bg-gradient-to-br from-orange-50 to-amber-100 pb-20 pt-5 px-4 overflow-auto">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-orange-950 mb-8 text-center">
+          <h2 className="text-2xl font-bold text-orange-950 mb-8 text-center">
             Select Your Business
           </h2>
 
