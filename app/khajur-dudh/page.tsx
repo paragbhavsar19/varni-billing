@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Plus, Minus, X, Edit2, Trash2, Check } from "lucide-react";
 
+
 type BillItem = {
   id: string;
   name: string;
@@ -38,7 +39,8 @@ const ThermalBillPrint = ({ billItems, grandTotal }: { billItems: BillItem[], gr
       <div className="thermal-receipt">
         {/* Header */}
         <div className="text-center mb-3">
-          <h2 className="text-lg font-semibold">Varni Khajur Dudh Billing</h2>
+          <h2 className="text-lg font-semibold">Varni Khajur Dudh</h2>
+          <h2 className="text-sm font-semibold">AMC Gardern,Opp. Prince Bhajipav, Vandematram Rd, Gota, Ahmedabad </h2>
           <div className="border-t-2 border-dashed border-black my-2"></div>
         </div>
 
