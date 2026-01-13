@@ -18,6 +18,7 @@ export default function GolaPyaliPage() {
   const [orders, setOrders] = useState<Record<number, number>>({});
   const [customerName, setCustomerName] = useState("");
   const [showBill, setShowBill] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
   const [billNumber, setBillNumber] = useState("");
   const [billTime, setBillTime] = useState("");
 
@@ -81,6 +82,10 @@ export default function GolaPyaliPage() {
     setShowBill(true);
   };
 
+  const handleViewOrder = () => {
+    setShowViewModal(true);
+  };
+
   const handleSave = () => {
     prepareBill();
     setTimeout(() => {
@@ -124,24 +129,19 @@ export default function GolaPyaliPage() {
             {/* Header */}
             <div className="text-center mb-3 pb-2 border-b-2 border-dashed border-gray-800">
               <div className="text-4xl mb-1">🍧</div>
-              <h1 className="text-xl font-bold text-black">GOLA SHOP</h1>
+              <h1 className="text-xl font-bold text-black">VARNI GOLA SHOP</h1>
               <p className="text-xs text-gray-700 mt-0.5">
-                Fresh & Delicious Ice Gola
+                Fresh & Delicious Ice Gola Pyali
               </p>
             </div>
 
             {/* Bill Info */}
-            <div className="mb-3 text-xs space-y-0.5">
-              <div className="flex justify-between">
-                <span>Date:</span>
-                <span className="font-medium">{billTime.split(",")[0]}</span>
+            <div className="mb-3 text-xs space-y-0.5 font-bold">
+              <div className="flex justify-between ">
+                <span>Date & Time</span>
+                <span className="">{billTime.split(",")[0]} {billTime.split(",")[1]?.trim() || ""}</span>
               </div>
-              <div className="flex justify-between">
-                <span>Time:</span>
-                <span className="font-medium">
-                  {billTime.split(",")[1]?.trim() || ""}
-                </span>
-              </div>
+              
               <div className="flex justify-between">
                 <span>Bill No:</span>
                 <span className="font-bold">{billNumber}</span>
@@ -149,7 +149,7 @@ export default function GolaPyaliPage() {
               {customerName && (
                 <div className="flex justify-between">
                   <span>Customer:</span>
-                  <span className="font-medium">{customerName}</span>
+                  <span className="">{customerName}</span>
                 </div>
               )}
             </div>
@@ -170,7 +170,7 @@ export default function GolaPyaliPage() {
               return (
                 <div
                   key={id}
-                  className="flex justify-between text-xs py-1.5 border-b border-dashed border-gray-300"
+                  className="flex justify-between text-xs py-1.5 border-b border-dashed border-gray-300 font-bold"
                 >
                   <span className="flex-1">{gola.name}</span>
                   <span className="w-10 text-center font-medium">{qty}</span>
@@ -219,7 +219,7 @@ export default function GolaPyaliPage() {
               placeholder="Customer Name"
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
-              className="w-full p-3 border-2 border-orange-300 rounded-lg text-lg font-medium focus:outline-none focus:border-orange-500"
+              className="w-full p-3 border-2 border-orange-300 rounded-lg text-lg font-medium focus:outline-none focus:border-orange-500 text-black placeholder:text-black"
             />
           </div>
 
@@ -267,12 +267,23 @@ export default function GolaPyaliPage() {
           </div>
         </div>
 
-        <div className="fixed bottom-0 left-0 right-0 bg-white shadow-2xl border-t-2 border-gray-200 px-4 py-2">
-          <div className="max-w-md mx-auto flex gap-2">
+        <div className="fixed bottom-0 left-0 right-0 bg-white shadow-2xl border-t-2 border-gray-200 px-2 py-2">
+          <div className="max-w-md mx-auto flex gap-1">
+            <button
+              onClick={handleViewOrder}
+              disabled={!hasOrders}
+              className={`flex-1 py-1.5 rounded-lg font-bold text-white flex items-center justify-center gap-2 transition-all text-sm ${
+                hasOrders
+                  ? "bg-[#14B8A6] hover:bg-blue-700 active:scale-95"
+                  : "bg-gray-300 cursor-not-allowed"
+              }`}
+            >
+              View
+            </button>
             <button
               onClick={handleSave}
               disabled={!hasOrders}
-              className={`flex-1 py-3 rounded-lg font-bold text-white flex items-center justify-center gap-2 transition-all ${
+              className={`flex-1 py-1.5 rounded-lg font-bold text-white flex items-center justify-center gap-2 transition-all text-sm ${
                 hasOrders
                   ? "bg-blue-600 hover:bg-blue-700 active:scale-95"
                   : "bg-gray-300 cursor-not-allowed"
@@ -284,7 +295,7 @@ export default function GolaPyaliPage() {
             <button
               onClick={handlePrint}
               disabled={!hasOrders}
-              className={`flex-1 py-3 rounded-lg font-bold text-white flex items-center justify-center gap-2 transition-all ${
+              className={`flex-1 py-1.5 rounded-lg font-bold text-white flex items-center justify-center gap-2 transition-all text-sm ${
                 hasOrders
                   ? "bg-green-600 hover:bg-green-700 active:scale-95"
                   : "bg-gray-300 cursor-not-allowed"
@@ -296,7 +307,7 @@ export default function GolaPyaliPage() {
             <button
               onClick={handleSaveAndPrint}
               disabled={!hasOrders}
-              className={`flex-1 py-3 rounded-lg font-bold text-white flex items-center justify-center gap-2 transition-all ${
+              className={`flex-1 py-1.5 rounded-lg font-bold text-white flex items-center justify-center gap-2 transition-all text-sm ${
                 hasOrders
                   ? "bg-orange-600 hover:bg-orange-700 active:scale-95"
                   : "bg-gray-300 cursor-not-allowed"
@@ -307,6 +318,112 @@ export default function GolaPyaliPage() {
           </div>
         </div>
       </div>
+
+      {/* View Order Modal - iPhone style bottom sheet */}
+      {showViewModal && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/20 z-40 transition-opacity"
+            onClick={() => setShowViewModal(false)}
+          />
+          
+          {/* Modal */}
+          <div className="fixed inset-x-0 bottom-0 z-50 animate-slide-up">
+            <div className="bg-white rounded-t-3xl shadow-2xl max-h-[85vh] flex flex-col">
+              {/* Handle bar */}
+              <div className="flex justify-center pt-3 pb-2">
+                <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
+              </div>
+
+              {/* Header */}
+              <div className="px-6 py-4 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-gray-800">Order Summary</h2>
+                  <button
+                    onClick={() => setShowViewModal(false)}
+                    className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                  >
+                    <span className="text-2xl text-gray-600">×</span>
+                  </button>
+                </div>
+                {customerName && (
+                  <p className="text-sm text-gray-600 mt-1">Customer: <span className="font-semibold">{customerName}</span></p>
+                )}
+              </div>
+
+              {/* Order Items */}
+              <div className="flex-1 overflow-auto px-6 py-4">
+                <div className="space-y-3">
+                  {Object.entries(orders).map(([id, qty]) => {
+                    const gola = golas.find((g) => g.id === parseInt(id));
+                    if (!gola) return null;
+
+                    return (
+                      <div
+                        key={id}
+                        className="flex items-center justify-between bg-gradient-to-r from-orange-50 to-pink-50 rounded-xl p-4 border border-orange-200"
+                      >
+                        <div className="flex-1">
+                          <p className="font-semibold text-gray-800 text-lg">{gola.name}</p>
+                          <p className="text-sm text-gray-600">₹{gola.price} × {qty}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-2xl font-bold text-orange-600">₹{gola.price * qty}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Total Section */}
+              <div className="px-6 py-4 border-t-2 border-gray-200 bg-gray-50">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xl font-bold text-gray-800">Total Amount</span>
+                  <span className="text-3xl font-bold text-orange-600">₹{calculateTotal()}</span>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      setShowViewModal(false);
+                      handlePrint();
+                    }}
+                    className="flex-1 py-3 bg-green-600 text-white rounded-xl font-bold text-lg hover:bg-green-700 active:scale-95 transition-all"
+                  >
+                    Print Bill
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowViewModal(false);
+                      handleSaveAndPrint();
+                    }}
+                    className="flex-1 py-3 bg-orange-600 text-white rounded-xl font-bold text-lg hover:bg-orange-700 active:scale-95 transition-all"
+                  >
+                    Save & Print
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      <style jsx>{`
+        @keyframes slide-up {
+          from {
+            transform: translateY(100%);
+          }
+          to {
+            transform: translateY(0);
+          }
+        }
+        .animate-slide-up {
+          animation: slide-up 0.3s ease-out;
+        }
+      `}</style>
     </>
   );
 }
