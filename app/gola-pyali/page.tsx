@@ -18,6 +18,8 @@ export default function GolaPyaliPage() {
   const [orders, setOrders] = useState<Record<number, number>>({});
   const [customerName, setCustomerName] = useState("");
   const [showBill, setShowBill] = useState(false);
+  const [billNumber, setBillNumber] = useState("");
+  const [billTime, setBillTime] = useState("");
 
   const golas = [
     { id: 1, name: "Kala Khatta", price: 20 },
@@ -73,8 +75,14 @@ export default function GolaPyaliPage() {
     return "G" + Date.now().toString().slice(-8);
   };
 
-  const handleSave = () => {
+  const prepareBill = () => {
+    setBillNumber(generateBillNumber());
+    setBillTime(new Date().toLocaleString("en-IN"));
     setShowBill(true);
+  };
+
+  const handleSave = () => {
+    prepareBill();
     setTimeout(() => {
       setShowBill(false);
       alert("Order Saved Successfully!");
@@ -82,14 +90,14 @@ export default function GolaPyaliPage() {
   };
 
   const handlePrint = () => {
-    setShowBill(true);
+    prepareBill();
     setTimeout(() => {
       window.print();
     }, 100);
   };
 
   const handleSaveAndPrint = () => {
-    setShowBill(true);
+    prepareBill();
     setTimeout(() => {
       window.print();
       alert("Order Saved Successfully!");
@@ -126,22 +134,17 @@ export default function GolaPyaliPage() {
             <div className="mb-3 text-xs space-y-0.5">
               <div className="flex justify-between">
                 <span>Date:</span>
-                <span className="font-medium">
-                  {new Date().toLocaleDateString("en-IN")}
-                </span>
+                <span className="font-medium">{billTime.split(",")[0]}</span>
               </div>
               <div className="flex justify-between">
                 <span>Time:</span>
                 <span className="font-medium">
-                  {new Date().toLocaleTimeString("en-IN", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  {billTime.split(",")[1]?.trim() || ""}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span>Bill No:</span>
-                <span className="font-bold">{generateBillNumber()}</span>
+                <span className="font-bold">{billNumber}</span>
               </div>
               {customerName && (
                 <div className="flex justify-between">
@@ -209,8 +212,8 @@ export default function GolaPyaliPage() {
     <>
       <Header showBackButton />
       <div className="min-h-screen bg-gradient-to-br from-orange-100 to-pink-100 pb-24">
-        <div className="p-4 max-w-md mx-auto">
-          <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+        <div className="px-4 py-2 max-w-md mx-auto">
+          <div className="bg-white rounded-lg shadow-md  mb-2">
             <input
               type="text"
               placeholder="Customer Name"
@@ -218,6 +221,14 @@ export default function GolaPyaliPage() {
               onChange={(e) => setCustomerName(e.target.value)}
               className="w-full p-3 border-2 border-orange-300 rounded-lg text-lg font-medium focus:outline-none focus:border-orange-500"
             />
+          </div>
+
+          <div className="font-bold flex items-center justify-between border-b border-gray-200 py-3 px-4 last:border-b-0 bg-white p-1.5 mb-2 rounded-lg shadow-md  mb-2">
+            <span className=" flex-1 text-gray-800 ">Item Name</span>
+            <span className=" flex-1 text-gray-800 pl-16">Quantity</span>
+            <span className=" text-gray-800 w-16 text-right text-lg">
+              Price
+            </span>
           </div>
 
           <div className="bg-white rounded-lg shadow-md overflow-auto h-[calc(100vh-264px)]">
@@ -256,7 +267,7 @@ export default function GolaPyaliPage() {
           </div>
         </div>
 
-        <div className="fixed bottom-0 left-0 right-0 bg-white shadow-2xl border-t-2 border-gray-200 p-4">
+        <div className="fixed bottom-0 left-0 right-0 bg-white shadow-2xl border-t-2 border-gray-200 px-4 py-2">
           <div className="max-w-md mx-auto flex gap-2">
             <button
               onClick={handleSave}
